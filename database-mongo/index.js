@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('mongodb://localhost/todo');
 
 var db = mongoose.connection;
 
@@ -12,8 +12,11 @@ db.once('open', function() {
 });
 
 var itemSchema = mongoose.Schema({
-  quantity: Number,
-  description: String
+  todo: String,
+  isDone: Boolean,
+  description:String,
+  deadLine:Number
+  // id:Number.increments()
 });
 
 var Item = mongoose.model('Item', itemSchema);
@@ -28,4 +31,18 @@ var selectAll = function(callback) {
   });
 };
 
+var save = function (data,callback) {
+  var item = new Item(data)
+  item.save(function(err,dataRes) {
+    if(err){
+      callback(err,null)
+    }
+    callback(null,dataRes)
+  })
+}
+
+
 module.exports.selectAll = selectAll;
+module.exports.Item = Item;
+module.exports.save = save;
+
